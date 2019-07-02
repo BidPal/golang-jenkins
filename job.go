@@ -6,6 +6,10 @@ import (
 	"log"
 )
 
+const (
+	parameterPropertyType = "hudson.model.ParametersDefinitionProperty"
+)
+
 type Artifact struct {
 	DisplayPath  string `json:"displayPath"`
 	FileName     string `json:"fileName"`
@@ -90,6 +94,8 @@ type Job struct {
 	LastSuccessfulBuild   Build `json:"lastSuccessfulBuild"`
 	LastUnstableBuild     Build `json:"lastUnstableBuild"`
 	LastUnsuccessfulBuild Build `json:"lastUnsuccessfulBuild"`
+
+	Properties []BuildProperty `json:"property"`
 }
 
 type MultiBranchProject struct {
@@ -360,4 +366,12 @@ func JobToXml(jobItem JobItem) ([]byte, error) {
 		return xml.Marshal(jobItem.PipelineJobItem)
 	}
 	return nil, fmt.Errorf("Unsupported JobItem type (%+v)", jobItem)
+}
+
+type BuildProperty struct {
+	Class string `json:"_class"`
+}
+
+func (bp *BuildProperty) IsParameter() bool {
+	return bp.Class == parameterPropertyType
 }

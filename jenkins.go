@@ -726,5 +726,12 @@ func hasParams(job Job) bool {
 			return true
 		}
 	}
+
+	for _, property := range job.Properties {
+		if property.IsParameter() {
+			return true
+		}
+	}
+
 	return false
 }
